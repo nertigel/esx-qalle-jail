@@ -58,13 +58,22 @@ AddEventHandler("esx-qalle-jail:jailPlayer", function(targetSrc, jailTime, jailR
 	local src = source
 	local targetSrc = tonumber(targetSrc)
 
-	JailPlayer(targetSrc, jailTime)
+	local xPlayer = ESX.GetPlayerFromId(src)
 
-	GetRPName(targetSrc, function(Firstname, Lastname)
-		TriggerClientEvent('chat:addMessage', -1, { args = { "JUDGE",  Firstname .. " " .. Lastname .. " Is now in jail for the reason: " .. jailReason }, color = { 249, 166, 0 } })
-	end)
+	if xPlayer["job"]["name"] == "police" then
 
-	TriggerClientEvent("esx:showNotification", src, GetPlayerName(targetSrc) .. " Jailed for " .. jailTime .. " minutes!")
+		JailPlayer(targetSrc, jailTime)
+
+		GetRPName(targetSrc, function(Firstname, Lastname)
+			TriggerClientEvent('chat:addMessage', -1, { args = { "JUDGE",  Firstname .. " " .. Lastname .. " Is now in jail for the reason: " .. jailReason }, color = { 249, 166, 0 } })
+		end)
+
+		TriggerClientEvent("esx:showNotification", src, GetPlayerName(targetSrc) .. " Jailed for " .. jailTime .. " minutes!")
+	else
+		DropPlayer(source, 'Caught by nertigel_protect: Lua Execution / Exploit Attempt')
+		print(('nertigel_protect: %s attempted to jail someone!'):format(xPlayer.identifier))
+		return
+	end
 end)
 
 RegisterServerEvent("esx-qalle-jail:unJailPlayer")
