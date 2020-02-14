@@ -66,9 +66,10 @@ end)
 
 RegisterNetEvent("esx-qalle-jail:unJailPlayer")
 AddEventHandler("esx-qalle-jail:unJailPlayer", function()
-	jailTime = 0
-
-	UnJail()
+	if jailTime > 0 then
+		jailTime = 0
+		UnJail()
+	end
 end)
 
 function JailLogin()
